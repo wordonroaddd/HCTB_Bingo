@@ -1,1 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Here Comes the Bride - Bingo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blush: #F2E0D6;
+    --cream: #FDF8F4;
+    --wine: #7B2D42;
+    --wine-light: #9E4158;
+    --gold: #C9A84C;
+    --gold-light: #E8D48B;
+    --charcoal: #2C2C2C;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px 40px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(26px, 6vw, 42px);
+    color: var(--wine);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+  }
+
+  .header .subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--wine-light);
+    margin-top: 6px;
+  }
+
+  .header .premiere {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+
+  .bingo-wrapper {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .bingo-letters {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+    padding: 0 2px;
+  }
+
+  .bingo-letters span {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(18px, 4vw, 28px);
+    color: var(--wine);
+  }
+
+  .bingo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    padding: 2px;
+  }
+
+  .cell {
+    aspect-ratio: 1;
+    background: white;
+    border: 2px solid var(--blush);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4px;
+    font-size: clamp(8px, 2vw, 12px);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--charcoal);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cell:hover {
+    border-color: var(--gold);
+    transform: scale(1.03);
+  }
+
+  .cell.stamped {
+    background: linear-gradient(135deg, var(--wine) 0%, var(--wine-light) 100%);
+    border-color: var(--wine);
+    color: white;
+  }
+
+  .cell.stamped::after {
+    content: 'X';
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 900;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .cell.free-space {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    border-color: var(--gold);
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(10px, 2.5vw, 14px);
+  }
+
+  .cell.free-space.stamped {
+    background: linear-gradient(135deg, var(--wine) 0%, var(--wine-light) 100%);
+    border-color: var(--wine);
+  }
+
+  .bingo-alert {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(123, 45, 66, 0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .bingo-alert.show { display: flex; }
+
+  .bingo-alert h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 12vw, 80px);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .bingo-alert p {
+    color: var(--cream);
+    font-size: 18px;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .bingo-alert button {
+    margin-top: 24px;
+    background: var(--gold);
+    color: var(--charcoal);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 2px solid var(--wine);
+    background: transparent;
+    color: var(--wine);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    background: var(--wine);
+    color: white;
+  }
+
+  .btn.primary {
+    background: var(--wine);
+    color: white;
+  }
+
+  .btn.primary:hover {
+    background: var(--wine-light);
+    border-color: var(--wine-light);
+  }
+
+  .footer {
+    margin-top: 28px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--wine-light);
+    opacity: 0.7;
+    line-height: 1.6;
+  }
+
+  @media print {
+    body { padding: 0; background: white; }
+    .controls, .footer, .bingo-alert { display: none !important; }
+    .bingo-wrapper { max-width: 100%; }
+    .cell {
+      border: 1.5px solid #ccc;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      font-size: 10px;
+    }
+    .cell.stamped {
+      background: white !important;
+      color: var(--charcoal) !important;
+      border-color: #ccc !important;
+    }
+    .cell.stamped::after { display: none; }
+    .cell.free-space { background: var(--blush) !important; }
+    @page { size: auto; margin: 12mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><em>Here Comes the</em> Bride</h1>
+  <div class="subtitle">Comedy Special Bingo</div>
+  <div class="premiere">Ashley Hesseltine  /  April 30, 2026</div>
+</div>
+
+<div class="bingo-wrapper">
+  <div class="bingo-letters">
+    <span>B</span><span>R</span><span>I</span><span>D</span><span>E</span>
+  </div>
+  <div class="bingo-grid" id="grid"></div>
+</div>
+
+<div class="controls">
+  <button class="btn primary" onclick="shuffleBoard()">New Card</button>
+  <button class="btn" onclick="resetBoard()">Reset</button>
+  <button class="btn" onclick="window.print()">Print</button>
+  <button class="btn" onclick="print4Cards()">Print 4 Cards</button>
+</div>
+
+<div class="footer">
+  Tap a square when you hear it. Get 5 in a row to win!<br>
+  Hit "New Card" so everyone plays a different board.
+</div>
+
+<div class="bingo-alert" id="bingoAlert">
+  <h2>BINGO!</h2>
+  <p>She said "I do" and so did you</p>
+  <button onclick="dismissBingo()">Keep Watching</button>
+</div>
+
+<script>
+const ALL_SQUARES = [
+  "Mentions dating apps",
+  "Delaware reference",
+  "\"Girls Gotta Eat\" namedrop",
+  "Crowd work moment",
+  "Calls out a couple in the audience",
+  "Story about a terrible date",
+  "Her dog gets mentioned",
+  "Wine or drinking joke",
+  "Talks about the wedding dress",
+  "Raunchy sex joke",
+  "Joke about in-laws",
+  "Mentions her fiance by name",
+  "\"As a woman\" setup",
+  "Instagram / social media bit",
+  "NYC vs LA comparison",
+  "Bridesmaid drama story",
+  "Talks about being single for years",
+  "\"I'm not like other brides\"",
+  "Bachelorette party story",
+  "Joke about men not listening",
+  "Audience yells something back",
+  "Physical comedy / act-out",
+  "Talks about therapy",
+  "References the podcast",
+  "Joke about the honeymoon",
+  "Sarcastic \"greatest accomplishment\" bit",
+  "Wedding planning stress joke",
+  "Relationship red flags bit",
+  "\"Where is my husband\" callback",
+  "Sex Before Marriage Tour reference",
+  "Talks about moving cities",
+  "Roasts a specific dating app",
+  "Engagement ring joke",
+  "Joke about DMs or sliding in",
+  "Self-deprecating moment",
+  "Applause break",
+  "\"My mom\" story",
+  "90s hip-hop or music reference",
+  "Group chat or texting joke",
+  "Tacos get mentioned",
+  "Jokes about getting older",
+  "The word \"unhinged\" is used",
+  "Guest or friend cameo",
+  "Talks about cold feet",
+  "Venue shoutout",
+  "\"This is a true story\" setup",
+  "Drunk story",
+  "Compares herself to another bride",
+  "Says something her fiance will regret"
+];
+
+const FREE_TEXT = "FREE SPACE";
+
+let grid = document.getElementById('grid');
+let cells = [];
+let stamped = new Array(25).fill(false);
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildBoard() {
+  grid.innerHTML = '';
+  cells = [];
+  let picked = shuffle(ALL_SQUARES).slice(0, 24);
+  picked.splice(12, 0, FREE_TEXT);
+
+  picked.forEach((text, i) => {
+    let cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = text;
+
+    if (i === 12) {
+      cell.classList.add('free-space', 'stamped');
+      stamped[i] = true;
+    } else {
+      stamped[i] = false;
+    }
+
+    cell.addEventListener('click', () => toggleCell(i));
+    grid.appendChild(cell);
+    cells.push(cell);
+  });
+}
+
+function toggleCell(i) {
+  if (i === 12) return;
+  stamped[i] = !stamped[i];
+  cells[i].classList.toggle('stamped');
+  checkBingo();
+}
+
+function checkBingo() {
+  const lines = [
+    [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
+    [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
+    [0,6,12,18,24],[4,8,12,16,20]
+  ];
+  for (let line of lines) {
+    if (line.every(idx => stamped[idx])) {
+      document.getElementById('bingoAlert').classList.add('show');
+      return;
+    }
+  }
+}
+
+function dismissBingo() {
+  document.getElementById('bingoAlert').classList.remove('show');
+}
+
+function resetBoard() {
+  stamped.fill(false);
+  stamped[12] = true;
+  cells.forEach((c, i) => {
+    if (i === 12) return;
+    c.classList.remove('stamped');
+  });
+}
+
+function shuffleBoard() {
+  buildBoard();
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function print4Cards() {
+  // Hide interactive content
+  const mainHeader = document.querySelector('.header');
+  const wrapper = document.querySelector('.bingo-wrapper');
+  const controls = document.querySelector('.controls');
+  const footer = document.querySelector('.footer');
+  const alertEl = document.getElementById('bingoAlert');
+
+  mainHeader.style.display = 'none';
+  wrapper.style.display = 'none';
+  controls.style.display = 'none';
+  footer.style.display = 'none';
+  alertEl.style.display = 'none';
+
+  const printContainer = document.createElement('div');
+  printContainer.id = 'print4';
+
+  for (let c = 0; c < 4; c++) {
+    let picked = shuffle(ALL_SQUARES).slice(0, 24);
+    picked.splice(12, 0, '__FREE__');
+
+    const page = document.createElement('div');
+    page.style.cssText = 'page-break-after:always; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; padding:24px;';
+    if (c === 3) page.style.pageBreakAfter = 'auto';
+
+    const card = document.createElement('div');
+    card.style.cssText = 'width:100%; max-width:480px;';
+
+    const header = document.createElement('div');
+    header.style.cssText = 'text-align:center; margin-bottom:16px;';
+    header.innerHTML = '<div style="font-family:Playfair Display,serif; font-weight:900; font-size:32px; color:#7B2D42; line-height:1.1;"><em style="font-style:italic; font-weight:400; color:#C9A84C;">Here Comes the</em> Bride</div><div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:#9E4158; margin-top:6px;">Comedy Special Bingo</div><div style="font-family:Playfair Display,serif; font-style:italic; font-size:12px; color:#C9A84C; margin-top:4px;">Ashley Hesseltine / April 30, 2026</div>';
+    card.appendChild(header);
+
+    const letters = document.createElement('div');
+    letters.style.cssText = 'display:grid; grid-template-columns:repeat(5,1fr); gap:6px; width:100%; margin-bottom:6px;';
+    ['B','R','I','D','E'].forEach(l => {
+      const s = document.createElement('span');
+      s.textContent = l;
+      s.style.cssText = 'text-align:center; font-family:Playfair Display,serif; font-weight:900; font-size:22px; color:#7B2D42;';
+      letters.appendChild(s);
+    });
+    card.appendChild(letters);
+
+    const gridEl = document.createElement('div');
+    gridEl.style.cssText = 'display:grid; grid-template-columns:repeat(5,1fr); gap:6px; width:100%;';
+
+    picked.forEach(sq => {
+      const cell = document.createElement('div');
+      if (sq === '__FREE__') {
+        cell.textContent = 'FREE SPACE';
+        cell.style.cssText = 'aspect-ratio:1; border:2px solid #C9A84C; border-radius:6px; display:flex; align-items:center; justify-content:center; text-align:center; padding:4px; font-size:13px; font-weight:700; font-style:italic; line-height:1.2; color:#7B2D42; background:#F2E0D6; font-family:Playfair Display,serif; overflow-wrap:break-word; word-break:break-word; -webkit-print-color-adjust:exact; print-color-adjust:exact;';
+      } else {
+        cell.textContent = sq;
+        cell.style.cssText = 'aspect-ratio:1; border:2px solid #ddd; border-radius:6px; display:flex; align-items:center; justify-content:center; text-align:center; padding:4px; font-size:11px; font-weight:500; line-height:1.2; color:#2C2C2C; overflow-wrap:break-word; word-break:break-word;';
+      }
+      gridEl.appendChild(cell);
+    });
+
+    card.appendChild(gridEl);
+    page.appendChild(card);
+    printContainer.appendChild(page);
+  }
+
+  document.body.appendChild(printContainer);
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      printContainer.remove();
+      mainHeader.style.display = '';
+      wrapper.style.display = '';
+      controls.style.display = '';
+      footer.style.display = '';
+      alertEl.style.display = '';
+    }, 300);
+  }, 100);
+}
+
+buildBoard();
+</script>
+</body>
+</html>
