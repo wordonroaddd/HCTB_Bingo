@@ -61,9 +61,9 @@
   .header .premiere {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: 13px;
+    font-size: 18px;
     color: var(--gold);
-    margin-top: 4px;
+    margin-top: 6px;
   }
 
   .bingo-wrapper {
@@ -271,8 +271,7 @@
 
 <div class="header">
   <div class="subtitle">Ashley Hesseltine Presents</div>
-  <h1>Here Comes the Bride <em>Bingo</em></h1>
-  <div class="premiere">April 30, 2026</div>
+  <h1><em>Here Comes the Bride</em> Bingo</h1>
 </div>
 
 <div class="bingo-wrapper">
@@ -296,7 +295,6 @@
 
 <div class="bingo-alert" id="bingoAlert">
   <h2>BINGO!</h2>
-  <p>She said "I do" and so did you</p>
   <button onclick="dismissBingo()">Keep Watching</button>
 </div>
 
@@ -317,13 +315,22 @@ const ALL_SQUARES = [
   "Masturbation act-out",
   "Leigh Hesseltine on screen",
   "Hair flip",
-  "New York",
-  "Los Angeles",
-  "Atlanta",
+  "\"Fanny pack\"",
+  "\"Vows\"",
+  "\"Ick\"",
+  "\"Boston\"",
+  "\"Drunk slut\"",
+  "\"DC\"",
+  "\"Go Birds\"",
+  "\"Republican\"",
+  "\"Water Wiggler\"",
+  "\"New York\"",
+  "\"Los Angeles\"",
+  "\"Atlanta\"",
   "\"Worthless Loser\"",
-  "Stomach and tits",
-  "Planned Parenthood",
-  "Gun Control",
+  "\Stomach and tits",
+  "\Planned Parenthood",
+  "\"Gun Control\"",
   "\"Maid-of-honor\"",
   "\"TGIFriday's\"",
   "Laguna Beach deep cut",
@@ -441,7 +448,7 @@ function print4Cards() {
 
     const header = document.createElement('div');
     header.style.cssText = 'text-align:center; margin-bottom:16px;';
-    header.innerHTML = '<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:#9E4158;">Ashley Hesseltine Presents</div><div style="font-family:Playfair Display,serif; font-weight:900; font-size:32px; color:#7B2D42; line-height:1.1; margin-top:6px;">Here Comes the Bride <em style="font-style:italic; font-weight:400; color:#C9A84C;">Bingo</em></div><div style="font-family:Playfair Display,serif; font-style:italic; font-size:12px; color:#C9A84C; margin-top:4px;">April 30, 2026</div>';
+    header.innerHTML = '<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:#9E4158;">Ashley Hesseltine Presents</div><div style="font-family:Playfair Display,serif; font-weight:900; font-size:32px; color:#7B2D42; line-height:1.1; margin-top:6px;"><em style="font-style:italic; font-weight:400; color:#C9A84C;">Here Comes the Bride</em> Bingo</div><div style="font-family:Playfair Display,serif; font-style:italic; font-size:12px; color:#C9A84C; margin-top:4px;">April 30, 2026</div>';
     card.appendChild(header);
 
     const letters = document.createElement('div');
