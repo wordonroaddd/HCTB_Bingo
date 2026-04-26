@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --blush: #F2E0D6;
-    --cream: #FDF8F4;
-    --wine: #7B2D42;
-    --wine-light: #9E4158;
+    --blush: #E8D8E0;
+    --cream: #FDF6F9;
+    --wine: #5C2446;
+    --wine-light: #7A3B62;
     --gold: #C9A84C;
     --gold-light: #E8D48B;
     --charcoal: #2C2C2C;
@@ -159,7 +159,7 @@
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(123, 45, 66, 0.92);
+    background: rgba(92, 36, 70, 0.92);
     z-index: 100;
     align-items: center;
     justify-content: center;
@@ -203,23 +203,24 @@
 
   .controls {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin-top: 20px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
   }
 
   .btn {
     font-family: 'DM Sans', sans-serif;
     font-weight: 600;
-    font-size: 13px;
-    padding: 10px 20px;
+    font-size: 11px;
+    padding: 8px 14px;
     border-radius: 50px;
     border: 2px solid var(--wine);
     background: transparent;
     color: var(--wine);
     cursor: pointer;
     transition: all 0.2s;
+    white-space: nowrap;
   }
 
   .btn:hover {
@@ -272,6 +273,7 @@
 <div class="header">
   <div class="subtitle">Ashley Hesseltine Presents</div>
   <h1><em>Here Comes the Bride</em> Bingo</h1>
+  <div class="premiere">April 30, 2026</div>
 </div>
 
 <div class="bingo-wrapper">
@@ -295,6 +297,7 @@
 
 <div class="bingo-alert" id="bingoAlert">
   <h2>BINGO!</h2>
+  <p>She said "I do" and so did you</p>
   <button onclick="dismissBingo()">Keep Watching</button>
 </div>
 
@@ -329,7 +332,7 @@ const ALL_SQUARES = [
   "\"Atlanta\"",
   "\"Worthless Loser\"",
   "\"Stomach and tits\"",
-  "\Planned Parenthood",
+  "\"Planned Parenthood\"",
   "\"Gun Control\"",
   "\"Maid-of-honor\"",
   "\"TGIFriday's\"",
